@@ -48,10 +48,6 @@ namespace BaseController
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            
-
-            
-
             _base.Update();
 
 

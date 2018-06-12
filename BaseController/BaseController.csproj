@@ -71,7 +71,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="GateWay\ConnectionManager.cs" />
+    <Compile Include="GateWay\GateWayConfig.cs" />
     <Compile Include="GateWay\MesageSender.cs" />
     <Compile Include="GateWay\MessageReciever.cs" />
     <Compile Include="MainWindow.xaml.cs">

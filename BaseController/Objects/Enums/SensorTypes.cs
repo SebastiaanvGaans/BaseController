@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BaseController
 {
-    enum SensorTypes
+    public enum SensorTypes
     {
         Temperature,
         CO2,

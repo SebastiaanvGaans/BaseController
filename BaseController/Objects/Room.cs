@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace BaseController
 {
@@ -13,17 +14,26 @@ namespace BaseController
         MessageSender sender;
 
         List<SensorUnit> sensors;
+
+        string fullName { get => baseName + "." + floorName + "." + roomName; }
+        string baseName;
+        string floorName;
         string roomName;
 
-        public Room(string roomName, ConnectionFactory factory)
+        public Room(string baseName, string floorName,  string roomName, ConnectionFactory factory)
         {
-            sensors = new List<SensorUnit>();
-            this.roomName = roomName;
-
-            foreach (SensorTypes type in Enum.GetValues(typeof(SensorTypes)))
-                sensors.Add(new SensorUnit(factory, this.roomName, type));
-
             sender = new MessageSender(factory);
+
+            sensors = new List<SensorUnit>();
+
+            this.baseName = baseName;
+            this.floorName = floorName;
+            this.roomName = roomName;
+            
+            foreach (SensorTypes type in Enum.GetValues(typeof(SensorTypes)))
+                sensors.Add(new SensorUnit(factory, type));
+
+
         }
 
 
@@ -35,8 +45,16 @@ namespace BaseController
             sender.OpenConnection();
 
             foreach (SensorUnit sensor in sensors)
-                sender.SendToQueue("SebastiaansTestQueue", sensor.Update());
+            {
+                Measurement measurement = sensor.Update();
+                measurement.name = fullName;
 
+                sender.SendToExchange(
+                    GateWayConfig.EXCHANGE_SENSOR_IN,
+                    JsonConvert.SerializeObject(measurement),
+                    "direct",
+                    GateWayConfig.QUEUE_SENSOR_IN);
+            }
             sender.CloseConnection();
                 
         }

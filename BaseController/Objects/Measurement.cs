@@ -6,25 +6,28 @@ using System.Threading.Tasks;
 
 namespace BaseController
 {
-    class Measurement
+    public class Measurement
     {
-        public string roomName;
+        public string ID { get => name + type.ToString(); }
+        public string name;
         public float value;
         public SensorTypes type;
 
         public Measurement()
         {
         }
-        public Measurement(string roomName, float value, SensorTypes type)
+        public Measurement(float value, SensorTypes type)
         {
-            this.roomName = roomName;
             this.value = value;
             this.type = type;
+
         }
 
         public override string ToString()
         {
-            return roomName + "; "+ type.ToString() + ": " + value;
+            return name + ": " + type.ToString() + " = " + value;
         }
+
+        
     }
 }

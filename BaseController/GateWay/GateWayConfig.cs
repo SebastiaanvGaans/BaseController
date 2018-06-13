@@ -12,12 +12,12 @@ namespace BaseController
         //public static string HOST = "192.168.24.77";
         public static string HOST = "localhost";
 
-        private static ConnectionFactory factory = new ConnectionFactory { HostName = HOST };
+        public static string EXCHANGE_SENSOR_IN = "SensorIn";
+        public static string EXCHANGE_SENSOR_OUT = "SensorOut";
 
-        public static IConnection GetConnection()
-        {
-            return factory.CreateConnection();
-        }
+        public static string QUEUE_SENSOR_IN = "SensorInputQueue";
+
+        public static string QUEUE_SENSOR_ANSWER = "SensorAnswerQueue";
 
     }
 }

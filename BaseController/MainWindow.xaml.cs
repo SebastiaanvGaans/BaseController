@@ -23,27 +23,27 @@ namespace BaseController
     /// </summary>
     public partial class MainWindow : Window
     {
-        ConnectionFactory factory = new ConnectionFactory { HostName = GateWayConfig.HOST};
+        ConnectionFactory factory = new ConnectionFactory { HostName = GateWayConfig.HOST };
         Base _base;
 
         public MainWindow()
         {
             InitializeComponent();
-            _base = new Base("Stargate", 5, 50, factory);
+            _base = new Base("Stargate", 5, 5, factory);
 
-            var messageReciever = new MessageReciever(factory);
-            var consumer = new EventingBasicConsumer(messageReciever.GetChannel());
-            consumer.Received += (model, ea) =>
-            {
-                var body = ea.Body;
-                var message = Encoding.UTF8.GetString(body);
+            //var messageReciever = new MessageReciever(factory);
+            //var consumer = new EventingBasicConsumer(messageReciever.GetChannel());
+            //consumer.Received += (model, ea) =>
+            //{
+            //    var body = ea.Body;
+            //    var message = Encoding.UTF8.GetString(body);
 
-                Measurement measurement = JsonConvert.DeserializeObject<Measurement>(message);
+            //    Measurement measurement = JsonConvert.DeserializeObject<Measurement>(message);
 
-                System.Diagnostics.Debug.WriteLine(measurement.ToString());
-            };
+            //    System.Diagnostics.Debug.WriteLine(measurement.ToString());
+            //};
 
-            messageReciever.SetListenerToQueue("SebastiaansTestQueue", consumer);
+            //messageReciever.SetListenerToQueue("SebastiaansTestQueue", consumer);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

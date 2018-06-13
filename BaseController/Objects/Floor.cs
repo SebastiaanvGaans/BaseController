@@ -10,13 +10,19 @@ namespace BaseController
 {
     public class Floor
     {
+        string baseName;
+        string floorName;
+
         List<Room> rooms = new List<Room>();
 
-        public Floor(string floorName, int amountOfRooms, ConnectionFactory factory)
+        public Floor(string baseName,string floorName, int amountOfRooms, ConnectionFactory factory)
         {
+            this.baseName = baseName;
+            this.floorName = floorName;
+
             for (int i = 1; i <= amountOfRooms; i++)
             {
-                rooms.Add(new Room(floorName + "R" + i, factory));
+                rooms.Add(new Room(baseName, floorName, "R" + i, factory));
             }
         }
 

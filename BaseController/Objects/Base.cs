@@ -18,7 +18,7 @@ namespace BaseController
             this.baseName = baseName;
 
             for (int i = 1; i <= amountOfFloors; i++)
-                floors.Add(new Floor("F" + i, amountOfRoomsPerFloor, factory));
+                floors.Add(new Floor(baseName, "F" + i, amountOfRoomsPerFloor, factory));
 
         }
 

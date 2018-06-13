@@ -71,7 +71,7 @@ namespace BaseController
                 routingKey: routingKey,
                 basicProperties: null,
                 body: Encoding.UTF8.GetBytes(message));
-            connection.Close();
+            //connection.Close();
         }
 
     }

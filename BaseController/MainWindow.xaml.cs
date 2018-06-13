@@ -24,17 +24,20 @@ namespace BaseController
     public partial class MainWindow : Window
     {
         ConnectionFactory factory = new ConnectionFactory { HostName = GateWayConfig.HOST };
-        Base _base;
+        Base Stargate;
+        Base Area51;
 
         public MainWindow()
         {
             InitializeComponent();
-            _base = new Base("Stargate", 5, 5, factory);
+            Stargate = new Base("Stargate", 5,3, 3, factory);
+            Area51 = new Base("Area51", 4, 2, 2, factory);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            _base.Update();
+            Stargate.Update();
+            Area51.Update();
         }
     }
 }

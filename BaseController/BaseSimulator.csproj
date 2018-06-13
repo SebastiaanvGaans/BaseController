@@ -90,6 +90,7 @@
     <Compile Include="Objects\Floor.cs" />
     <Compile Include="Objects\Measurement.cs" />
     <Compile Include="Objects\Room.cs" />
+    <Compile Include="Objects\Section.cs" />
     <Compile Include="Objects\SensorUnit.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

@@ -1,54 +1,49 @@
-﻿using RabbitMQ.Client;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
 namespace BaseController
 {
-    public class Room
+    public class Section
     {
-        MessageSender sender;
         MessageReciever reciever;
 
-        List<SensorUnit> sensors;
-        List<Controllable> controllables;
-
-        string fullName { get => baseName + "." + floorName + "." + sectionName + "." + roomName; }
+        string fullName { get => baseName + "." + floorName + "." + sectionName; }
         string baseName;
         string floorName;
-        string roomName;
         string sectionName;
 
-        public Room(string baseName, string floorName, string sectionName, string roomName, ConnectionFactory factory)
+        public List<Room> rooms = new List<Room>();
+
+        public Section(
+            string baseName,
+            string floorName,
+            string sectionName,
+            int amountOfRooms,
+            ConnectionFactory factory)
         {
-            sender = new MessageSender(factory);
-
-            sensors = new List<SensorUnit>();
-            controllables = new List<Controllable>();
-
             this.baseName = baseName;
             this.floorName = floorName;
-            this.roomName = roomName;
             this.sectionName = sectionName;
 
-            foreach (SensorTypes type in Enum.GetValues(typeof(SensorTypes)))
-                sensors.Add(new SensorUnit(factory, type));
-
-            foreach (ControllableType type in Enum.GetValues(typeof(ControllableType)))
-                controllables.Add(new Controllable(fullName, type, factory));
+            for (int i = 1; i <= amountOfRooms; i++)
+            {
+                rooms.Add(new Room(baseName, floorName, sectionName, "R" + i, factory));
+            }
 
             reciever = new MessageReciever(factory);
+
             SetUpTopicListener();
         }
 
         private void SetUpTopicListener()
         {
-            //Listen for sensor commands
             var consumer = new EventingBasicConsumer(reciever.GetChannel());
             consumer.Received += (model, ea) =>
             {
@@ -62,9 +57,6 @@ namespace BaseController
                         break;
                     case CommandTypes.Resend:
                         this.Resend();
-                        break;
-                    case CommandTypes.Change:
-                        this.Change(command.sensor, command.value);
                         break;
                     default:
                         System.Diagnostics.Debug.WriteLine("Invalid command: " + command.ToString());
@@ -89,10 +81,10 @@ namespace BaseController
                 switch (command.type)
                 {
                     case CommandTypes.On:
-                        SetControllable(true, command.controllable);
+                        rooms.ForEach(x => x.SetControllable(true, command.controllable));
                         break;
                     case CommandTypes.Off:
-                        SetControllable(false, command.controllable);
+                        rooms.ForEach(x => x.SetControllable(false, command.controllable));
                         break;
                     default:
                         System.Diagnostics.Debug.WriteLine("Invalid command: " + command.ToString());
@@ -110,50 +102,15 @@ namespace BaseController
 
         public void Update()
         {
-            sender.OpenConnection();
-
-            foreach (SensorUnit sensor in sensors)
-            {
-                Measurement measurement = sensor.Update();
-                measurement.origin = fullName;
-
-                sender.SendToExchange(
-                    GateWayConfig.EXCHANGE_SENSOR_IN,
-                    JsonConvert.SerializeObject(measurement),
-                    "direct",
-                    GateWayConfig.QUEUE_SENSOR_IN);
-            }
-
-            sender.CloseConnection();
+            foreach (Room room in this.rooms)
+                new Thread(() => room.Update()).Start();
+            //room.Update();
         }
 
         public void Resend()
         {
-            sender.OpenConnection();
-
-            foreach (SensorUnit sensor in sensors)
-            {
-                Measurement measurement = sensor.GetMeasurement();
-                measurement.origin = fullName;
-
-                sender.SendToExchange(
-                    GateWayConfig.EXCHANGE_SENSOR_IN,
-                    JsonConvert.SerializeObject(measurement),
-                    "direct",
-                    GateWayConfig.QUEUE_SENSOR_IN);
-            }
-
-            sender.CloseConnection();
-        }
-
-        public void Change(SensorTypes sensor, float value)
-        {
-            Measurement measurement = sensors.Find(x => x.sensorType == sensor).ChangeValue(value);
-        }
-
-        public void SetControllable(bool value, ControllableType type)
-        {
-            controllables.Find(x => x.type == type).UpdateValue(value);
+            foreach (Room room in this.rooms)
+                new Thread(() => room.Resend()).Start();
         }
     }
 }

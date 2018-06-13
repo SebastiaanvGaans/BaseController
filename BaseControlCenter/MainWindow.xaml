@@ -31,7 +31,10 @@
 
             <ComboBox Margin="2" Name="commandtypes"></ComboBox>
             <Button Click="SendCommand">Send command</Button>
+
+            <!--<Button Click="Test">PREsS ME</Button>-->
         </StackPanel>
+        
         <StackPanel Grid.Column="2">
             <StackPanel Margin="5">
                 <ComboBox Margin="2" Name="commandtypes2"></ComboBox>

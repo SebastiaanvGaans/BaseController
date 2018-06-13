@@ -9,7 +9,7 @@ using RabbitMQ.Client.Events;
 
 namespace BaseController
 {
-    public class RPCClient
+    public class RpcClient
     {
         private readonly IConnection connection;
         private readonly IModel channel;
@@ -18,8 +18,10 @@ namespace BaseController
         private readonly BlockingCollection<string> respQueue = new BlockingCollection<string>();
         private readonly IBasicProperties props;
 
-        public RPCClient(ConnectionFactory factory)
+        public RpcClient()
         {
+            var factory = new ConnectionFactory() { HostName = GateWayConfig.HOST };
+
             connection = factory.CreateConnection();
             channel = connection.CreateModel();
             replyQueueName = channel.QueueDeclare().QueueName;
@@ -46,7 +48,7 @@ namespace BaseController
             var messageBytes = Encoding.UTF8.GetBytes(message);
             channel.BasicPublish(
                 exchange: "",
-                routingKey: "test",
+                routingKey: "rpc_queue",
                 basicProperties: props,
                 body: messageBytes);
 

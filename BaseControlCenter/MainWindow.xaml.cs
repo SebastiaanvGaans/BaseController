@@ -27,14 +27,11 @@ namespace BaseControlCenter
     {
         ControlCenter control;
 
-        RPCClient rpcClient;
-
         public MainWindow()
         {
             InitializeComponent();
 
             control = new ControlCenter();
-            rpcClient = new RPCClient(control.connectionFactory);
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -67,6 +64,17 @@ namespace BaseControlCenter
         private void ControllableCommandSpecific(object sender, RoutedEventArgs e)
         {
            control.ControllableCommandSpecific(RoutingKey2.Text, (CommandTypes)commandtypes3.SelectedItem, (ControllableType)controllableType2.SelectedItem);
+        }
+
+        private void Test(object sender, RoutedEventArgs e)
+        {
+            var rpcClient = new RpcClient();
+
+            Console.WriteLine(" [x] Requesting fib(30)");
+            var response = rpcClient.Call("30");
+            Console.WriteLine(" [.] Got '{0}'", response);
+
+            rpcClient.Close();
         }
     }
 }

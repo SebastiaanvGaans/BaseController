@@ -20,5 +20,7 @@ namespace BaseController
 
         public static string EXCHANGE_CONTROLLABLE_GENERAL = "GeneralControl";
 
+        public static string EXCHANGE_REQUEST = "Request";
+
     }
 }

@@ -90,6 +90,7 @@ namespace BaseControlCenter
 
         public void updateSpecific(string routingKey, CommandTypes selectedCommandType)
         {
+            //System.Diagnostics.Debug.WriteLine(routingKey);
             Command command = new Command(selectedCommandType);
 
             sender.SendToExchange(

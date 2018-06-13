@@ -21,13 +21,14 @@ namespace BaseController
         public Base(
             string baseName,
             int amountOfFloors,
-            int amountOfRoomsPerFloor,
+            int amountOfSections,
+            int amountOfRooms,
             ConnectionFactory factory)
         {
             this.baseName = baseName;
 
             for (int i = 1; i <= amountOfFloors; i++)
-                floors.Add(new Floor(baseName, "F" + i, amountOfRoomsPerFloor, factory));
+                floors.Add(new Floor(baseName, "F" + i, amountOfSections, amountOfRooms, factory));
 
             reciever = new MessageReciever(factory);
             SetUpTopicListener();

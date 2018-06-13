@@ -18,20 +18,21 @@ namespace BaseController
         string baseName;
         string floorName;
 
-        List<Room> rooms = new List<Room>();
+        List<Section> sections = new List<Section>();
 
         public Floor(
             string baseName,
             string floorName,
+            int amountOfSections,
             int amountOfRooms,
             ConnectionFactory factory)
         {
             this.baseName = baseName;
             this.floorName = floorName;
 
-            for (int i = 1; i <= amountOfRooms; i++)
+            for (int i = 1; i <= amountOfSections; i++)
             {
-                rooms.Add(new Room(baseName, floorName, "R" + i, factory));
+                sections.Add(new Section(baseName, floorName, "S" + i, amountOfRooms, factory));
             }
 
             reciever = new MessageReciever(factory);
@@ -77,10 +78,12 @@ namespace BaseController
                 switch (command.type)
                 {
                     case CommandTypes.On:
-                        rooms.ForEach(x => x.SetControllable(true, command.controllable));
+                        sections.ForEach(y => y.rooms.ForEach(x => x.SetControllable(true, command.controllable)));
+                        //rooms.ForEach(x => x.SetControllable(true, command.controllable));
                         break;
                     case CommandTypes.Off:
-                        rooms.ForEach(x => x.SetControllable(false, command.controllable));
+                        sections.ForEach(y => y.rooms.ForEach(x => x.SetControllable(false, command.controllable)));
+                        //rooms.ForEach(x => x.SetControllable(false, command.controllable));
                         break;
                     default:
                         System.Diagnostics.Debug.WriteLine("Invalid command: " + command.ToString());
@@ -98,15 +101,15 @@ namespace BaseController
 
         public void Update()
         {
-            foreach (Room room in this.rooms)
-                new Thread(() => room.Update()).Start();
+            foreach (Section section in this.sections)
+                section.Update();
             //room.Update();
         }
 
         public void Resend()
         {
-            foreach (Room room in this.rooms)
-                new Thread(() => room.Resend()).Start();
+            foreach (Section section in this.sections)
+                section.Resend();
         }
     }
 }

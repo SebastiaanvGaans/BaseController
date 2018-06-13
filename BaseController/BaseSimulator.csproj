@@ -81,6 +81,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Objects\Base.cs" />
+    <Compile Include="Objects\Command.cs" />
+    <Compile Include="Objects\Enums\CommandTypes.cs" />
     <Compile Include="Objects\Enums\SensorTypes.cs" />
     <Compile Include="Objects\Floor.cs" />
     <Compile Include="Objects\Measurement.cs" />

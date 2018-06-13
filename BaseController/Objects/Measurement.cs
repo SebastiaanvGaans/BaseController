@@ -8,8 +8,8 @@ namespace BaseController
 {
     public class Measurement
     {
-        public string ID { get => name + type.ToString(); }
-        public string name;
+        public string ID { get => origin + type.ToString(); }
+        public string origin;
         public float value;
         public SensorTypes type;
 
@@ -25,7 +25,7 @@ namespace BaseController
 
         public override string ToString()
         {
-            return name + ": " + type.ToString() + " = " + value;
+            return origin + ": " + type.ToString() + " = " + value;
         }
 
         

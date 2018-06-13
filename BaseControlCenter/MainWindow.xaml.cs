@@ -16,6 +16,7 @@ using BaseController;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using System.Threading;
 
 namespace BaseControlCenter
 {
@@ -31,5 +32,29 @@ namespace BaseControlCenter
 
             control = new ControlCenter();
         }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            commandtypes.ItemsSource = Enum.GetValues(typeof(CommandTypes)).Cast<CommandTypes>();
+
+
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            string key = Base.Text + "." + Floor.Text + "." + Room.Text;
+
+            control.updateSpecific(key, (CommandTypes)commandtypes.SelectedItem);
+        }
+
+        private void UpdateListView(object sender, RoutedEventArgs e)
+        {
+            var items = from pair in control.measurements orderby pair.Key ascending select pair;
+            //items.ToList();
+            //currentData.ItemsSource = control.measurements.OrderBy(i => i.Key).Values.ToList();
+            currentData.ItemsSource = items.ToList();
+        }
+
+
     }
 }

@@ -5,8 +5,43 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BaseControlCenter"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="350" Width="525" Loaded="Window_Loaded">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Column="0">
+            <Button Click="UpdateListView">Refresh</Button>
+            <ListView Margin="10" Name="currentData"
+                      VerticalContentAlignment="Top" 
+          ScrollViewer.VerticalScrollBarVisibility="Visible"
+          ScrollViewer.CanContentScroll="True"></ListView>
+        </StackPanel>
+
+
+        <StackPanel Grid.Column="2">
+            <Label Margin="5">Send to:</Label>
+            <StackPanel Orientation="Horizontal">
+                <Label Margin="5">Base:</Label>
+                <TextBox Margin="5" Name="Base" Width="100"></TextBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Margin="5">Floor Nr:</Label>
+                <TextBox Margin="5" Name="Floor" Width="100"></TextBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Margin="5">Room Nr:</Label>
+                <TextBox Margin="5" Name="Room" Width="100" ></TextBox>
+            </StackPanel>
+
+            <ComboBox Name="commandtypes"></ComboBox>
+            <Button Click="Button_Click">Send command</Button>
+        </StackPanel>
     </Grid>
 </Window>

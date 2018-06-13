@@ -13,7 +13,7 @@ namespace BaseController
         public static string HOST = "localhost";
 
         public static string EXCHANGE_SENSOR_IN = "SensorIn";
-        public static string EXCHANGE_SENSOR_OUT = "SensorOut";
+        public static string EXCHANGE_SENSOR_CONTROL = "SensorControl";
 
         public static string QUEUE_SENSOR_IN = "SensorInputQueue";
 

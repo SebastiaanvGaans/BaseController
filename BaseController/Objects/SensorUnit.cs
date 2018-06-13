@@ -14,7 +14,7 @@ namespace BaseController
 
         MessageReciever reciever;
 
-        SensorTypes sensorType;
+        public SensorTypes sensorType;
 
         float value = 100;
 
@@ -28,13 +28,18 @@ namespace BaseController
         public Measurement ChangeValue(float newValue)
         {
             this.value = newValue;
-            return new Measurement(value, sensorType);
+            return GetMeasurement();
         }
 
         public Measurement Update()
         {
             this.value += rand.Next(-5, 5);
 
+            return GetMeasurement();
+        }
+
+        public Measurement GetMeasurement()
+        {
             return new Measurement(value, sensorType);
         }
     }

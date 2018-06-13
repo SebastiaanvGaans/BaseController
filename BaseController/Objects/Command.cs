@@ -8,10 +8,12 @@ namespace BaseController
 {
     public class Command
     {
-        public CommandTypes type = CommandTypes.None;
+        public CommandTypes type;
 
         public SensorTypes sensor;
         public float value;
+
+        public ControllableType controllable;
 
         public Command(CommandTypes type)
         {

@@ -54,10 +54,6 @@ namespace BaseController
                     case CommandTypes.Resend:
                         this.Resend();
                         break;
-                    case CommandTypes.Change:
-                        //TODO
-                        break;
-                    case CommandTypes.None:
                     default:
                         System.Diagnostics.Debug.WriteLine("Invalid command: " + command.ToString());
                         break;
@@ -68,6 +64,34 @@ namespace BaseController
 
             reciever.SetListenerToExchange(
                 GateWayConfig.EXCHANGE_SENSOR_CONTROL,
+                consumer,
+                routingKeys);
+
+            //Listen to controllable commands
+            consumer = new EventingBasicConsumer(reciever.GetChannel());
+            consumer.Received += (model, ea) =>
+            {
+                var message = Encoding.UTF8.GetString(ea.Body);
+                Command command = JsonConvert.DeserializeObject<Command>(message);
+
+                switch (command.type)
+                {
+                    case CommandTypes.On:
+                        rooms.ForEach(x => x.SetControllable(true, command.controllable));
+                        break;
+                    case CommandTypes.Off:
+                        rooms.ForEach(x => x.SetControllable(false, command.controllable));
+                        break;
+                    default:
+                        System.Diagnostics.Debug.WriteLine("Invalid command: " + command.ToString());
+                        break;
+                }
+            };
+            routingKeys = new List<string>();
+            routingKeys.Add(fullName);
+
+            reciever.SetListenerToExchange(
+                GateWayConfig.EXCHANGE_CONTROLLABLE_GENERAL,
                 consumer,
                 routingKeys);
         }

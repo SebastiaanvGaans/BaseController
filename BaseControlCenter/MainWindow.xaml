@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BaseControlCenter"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525" Loaded="Window_Loaded">
+        Title="MainWindow" Height="500" Width="700" Loaded="Window_Loaded">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -16,32 +16,40 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Column="0">
-            <Button Click="UpdateListView">Refresh</Button>
+        <StackPanel Grid.Column="1">
+            <Button Margin="2" Click="UpdateListView">Refresh</Button>
             <ListView Margin="10" Name="currentData"
                       VerticalContentAlignment="Top" 
           ScrollViewer.VerticalScrollBarVisibility="Visible"
           ScrollViewer.CanContentScroll="True"></ListView>
         </StackPanel>
 
-
-        <StackPanel Grid.Column="2">
+        <StackPanel Grid.Column="0">
             <Label Margin="5">Send to:</Label>
-            <StackPanel Orientation="Horizontal">
-                <Label Margin="5">Base:</Label>
-                <TextBox Margin="5" Name="Base" Width="100"></TextBox>
+            <Label Margin="2">Base.Floor.Room=> Stargate.F1.R1</Label>
+            <TextBox Margin="2" Name="RoutingKey1" ></TextBox>
+
+            <ComboBox Margin="2" Name="commandtypes"></ComboBox>
+            <Button Click="SendCommand">Send command</Button>
+        </StackPanel>
+        <StackPanel Grid.Column="2">
+            <StackPanel Margin="5">
+                <ComboBox Margin="2" Name="commandtypes2"></ComboBox>
+                <ComboBox Margin="2" Name="controllableType"></ComboBox>
+                <Button Margin="2" Click="ControllableCommand">
+                    General control
+                </Button>
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label Margin="5">Floor Nr:</Label>
-                <TextBox Margin="5" Name="Floor" Width="100"></TextBox>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label Margin="5">Room Nr:</Label>
-                <TextBox Margin="5" Name="Room" Width="100" ></TextBox>
+            <StackPanel Margin="5">
+                <Label Margin="5">Control specific:</Label>
+                <Label Margin="2">Base.Floor.Room=> Stargate.F1.R1</Label>
+                <TextBox Margin="2" Name="RoutingKey2" ></TextBox>
+
+                <ComboBox Margin="2" Name="commandtypes3"></ComboBox>
+                <ComboBox Margin="2" Name="controllableType2"></ComboBox>
+                <Button Margin="2" Click="ControllableCommandSpecific">Send command</Button>
             </StackPanel>
 
-            <ComboBox Name="commandtypes"></ComboBox>
-            <Button Click="Button_Click">Send command</Button>
         </StackPanel>
     </Grid>
 </Window>

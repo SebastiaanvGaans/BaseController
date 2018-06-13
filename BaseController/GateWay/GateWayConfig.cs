@@ -16,8 +16,9 @@ namespace BaseController
         public static string EXCHANGE_SENSOR_CONTROL = "SensorControl";
 
         public static string QUEUE_SENSOR_IN = "SensorInputQueue";
-
         public static string QUEUE_SENSOR_ANSWER = "SensorAnswerQueue";
+
+        public static string EXCHANGE_CONTROLLABLE_GENERAL = "GeneralControl";
 
     }
 }

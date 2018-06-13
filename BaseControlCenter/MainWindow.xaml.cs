@@ -26,25 +26,29 @@ namespace BaseControlCenter
     public partial class MainWindow : Window
     {
         ControlCenter control;
+
+        RPCClient rpcClient;
+
         public MainWindow()
         {
             InitializeComponent();
 
             control = new ControlCenter();
+            rpcClient = new RPCClient(control.connectionFactory);
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             commandtypes.ItemsSource = Enum.GetValues(typeof(CommandTypes)).Cast<CommandTypes>();
-
-
+            commandtypes2.ItemsSource = Enum.GetValues(typeof(CommandTypes)).Cast<CommandTypes>();
+            commandtypes3.ItemsSource = Enum.GetValues(typeof(CommandTypes)).Cast<CommandTypes>();
+            controllableType.ItemsSource = Enum.GetValues(typeof(ControllableType)).Cast<ControllableType>();
+            controllableType2.ItemsSource = Enum.GetValues(typeof(ControllableType)).Cast<ControllableType>();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void SendCommand(object sender, RoutedEventArgs e)
         {
-            string key = Base.Text + "." + Floor.Text + "." + Room.Text;
-
-            control.updateSpecific(key, (CommandTypes)commandtypes.SelectedItem);
+            control.updateSpecific(RoutingKey1.Text, (CommandTypes)commandtypes.SelectedItem);
         }
 
         private void UpdateListView(object sender, RoutedEventArgs e)
@@ -55,6 +59,14 @@ namespace BaseControlCenter
             currentData.ItemsSource = items.ToList();
         }
 
+        private void ControllableCommand(object sender, RoutedEventArgs e)
+        {
+            control.ControllableCommandGeneral((CommandTypes)commandtypes2.SelectedItem, (ControllableType)controllableType.SelectedItem);
+        }
 
+        private void ControllableCommandSpecific(object sender, RoutedEventArgs e)
+        {
+           control.ControllableCommandSpecific(RoutingKey2.Text, (CommandTypes)commandtypes3.SelectedItem, (ControllableType)controllableType2.SelectedItem);
+        }
     }
 }

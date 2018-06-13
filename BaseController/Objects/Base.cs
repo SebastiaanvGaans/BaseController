@@ -49,10 +49,6 @@ namespace BaseController
                     case CommandTypes.Resend:
                         this.Resend();
                         break;
-                    case CommandTypes.Change:
-                        //TODO
-                        break;
-                    case CommandTypes.None:
                     default:
                         System.Diagnostics.Debug.WriteLine("Invalid command: " + command.ToString());
                         break;

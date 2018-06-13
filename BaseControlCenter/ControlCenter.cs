@@ -13,7 +13,7 @@ namespace BaseControlCenter
 {
     public class ControlCenter
     {
-        ConnectionFactory connectionFactory;
+        public ConnectionFactory connectionFactory;
 
         MessageReciever reciever;
         MessageSender sender;
@@ -55,8 +55,10 @@ namespace BaseControlCenter
             consumer = new EventingBasicConsumer(reciever.GetChannel());
             consumer.Received += (model, ea) =>
             {
+                //TODO currently unused
+
                 var message = Encoding.UTF8.GetString(ea.Body);
-                this.HandleIncomingMeasurement(JsonConvert.DeserializeObject<Measurement>(message));
+                //this.HandleIncomingMeasurement(JsonConvert.DeserializeObject<Measurement>(message));
             };
             routingKeys.Clear();
             routingKeys.Add(GateWayConfig.QUEUE_SENSOR_ANSWER);
@@ -95,6 +97,27 @@ namespace BaseControlCenter
                     JsonConvert.SerializeObject(command),
                     "direct",
                     routingKey);
+        }
+
+        public void ControllableCommandGeneral(CommandTypes commandType, ControllableType controllableType)
+        {
+            Command command = new Command(commandType);
+
+            sender.SendToExchange(
+                GateWayConfig.EXCHANGE_CONTROLLABLE_GENERAL,
+                JsonConvert.SerializeObject(command),
+                "direct",
+                controllableType.ToString());
+        }
+        public void ControllableCommandSpecific(string routingKey, CommandTypes commandType, ControllableType controllableType)
+        {
+            Command command = new Command(commandType);
+
+            sender.SendToExchange(
+                GateWayConfig.EXCHANGE_CONTROLLABLE_GENERAL,
+                JsonConvert.SerializeObject(command),
+                "direct",
+                routingKey);
         }
     }
 }

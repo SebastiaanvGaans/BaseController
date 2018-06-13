@@ -6,12 +6,9 @@ using System.Threading.Tasks;
 
 namespace BaseController
 {
-    public enum CommandTypes
+    public enum ControllableType
     {
-        Resend = 1,
-        Update = 2,
-        Change = 3,
-        Off = 4,
-        On = 5
+        Lights,
+        Door
     }
 }

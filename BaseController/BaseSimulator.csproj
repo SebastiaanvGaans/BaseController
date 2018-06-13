@@ -74,6 +74,7 @@
     <Compile Include="GateWay\GateWayConfig.cs" />
     <Compile Include="GateWay\MesageSender.cs" />
     <Compile Include="GateWay\MessageReciever.cs" />
+    <Compile Include="GateWay\RPCClient.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -83,6 +84,8 @@
     <Compile Include="Objects\Base.cs" />
     <Compile Include="Objects\Command.cs" />
     <Compile Include="Objects\Enums\CommandTypes.cs" />
+    <Compile Include="Objects\Enums\Controllable.cs" />
+    <Compile Include="Objects\Enums\ControllableType.cs" />
     <Compile Include="Objects\Enums\SensorTypes.cs" />
     <Compile Include="Objects\Floor.cs" />
     <Compile Include="Objects\Measurement.cs" />

@@ -45,7 +45,13 @@ namespace BaseControlCenter
 
         private void SendCommand(object sender, RoutedEventArgs e)
         {
-            control.UpdateSpecific(RoutingKey1.Text, (CommandTypes)commandtypes.SelectedItem);
+            //System.Diagnostics.Debug.WriteLine(RoutingKey1.Text);
+            //System.Diagnostics.Debug.WriteLine(commandtypes.SelectedItem);
+            if (!"".Equals(RoutingKey1.Text) && commandtypes.SelectedItem != null)
+            {
+                control.UpdateSpecific(RoutingKey1.Text, (CommandTypes)commandtypes.SelectedItem);
+                Thread.Sleep(500);
+            }
         }
 
         private void UpdateListViews(object sender, RoutedEventArgs e)
@@ -54,6 +60,7 @@ namespace BaseControlCenter
             currentData.ItemsSource = items.ToList();
 
             var errors = from pair in control.badMeasurements orderby pair.Key ascending select pair;
+            currentErrors.ItemsSource = new List<string>();
             currentErrors.ItemsSource = errors.ToList();
 
             currentUnreturned.ItemsSource = control.unreturnedCalls;
@@ -61,15 +68,26 @@ namespace BaseControlCenter
 
         private void ControllableCommand(object sender, RoutedEventArgs e)
         {
-            control.ControllableCommandGeneral((CommandTypes)commandtypes2.SelectedItem, (ControllableType)controllableType.SelectedItem);
+            //System.Diagnostics.Debug.WriteLine(commandtypes2.SelectedItem);
+            //System.Diagnostics.Debug.WriteLine(controllableType.SelectedItem);
+            if (controllableType.SelectedItem != null && commandtypes2.SelectedItem != null)
+            {
+                control.ControllableCommandGeneral((CommandTypes)commandtypes2.SelectedItem, (ControllableType)controllableType.SelectedItem);
+                Thread.Sleep(500);
+            }
         }
 
         private void ControllableCommandSpecific(object sender, RoutedEventArgs e)
         {
-           control.ControllableCommandSpecific(
-               RoutingKey2.Text, 
-               (CommandTypes)commandtypes3.SelectedItem, 
-               (ControllableType)controllableType2.SelectedItem);
+            //if (!"".Equals(controllableType2.SelectedItem) && !"".Equals(commandtypes3.SelectedItem) && !"".Equals(RoutingKey2.Text))
+            if (controllableType2.SelectedItem != null && commandtypes3.SelectedItem != null && !"".Equals(RoutingKey2.Text))
+            {
+                control.ControllableCommandSpecific(
+                    RoutingKey2.Text,
+                    (CommandTypes)commandtypes3.SelectedItem,
+                    (ControllableType)controllableType2.SelectedItem);
+                Thread.Sleep(500);
+            }
         }
 
         private void Test(object sender, RoutedEventArgs e)

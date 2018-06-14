@@ -7,67 +7,75 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="900" Width="1200" Loaded="Window_Loaded">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Column="1">
-            <Button Margin="2" Click="UpdateListViews">Refresh</Button>
-            <ListView Margin="10" Name="currentData" Height="700"
+        <Button Grid.Row="0" Margin="2" Click="UpdateListViews">Refresh</Button>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Column="1">
+                
+                <ListView Margin="10" Name="currentData" Height="700"
                       VerticalContentAlignment="Top" 
           ScrollViewer.VerticalScrollBarVisibility="Visible"
           ScrollViewer.CanContentScroll="True"></ListView>
-            <StackPanel Orientation="Horizontal">
-                <Button Click="RefreshSelected" Padding="2">Refresh</Button>
-                <Button Click="UpdateSelected" Padding="2">Update</Button>
-                <Button Click="ChangeSelected" Padding="2">Update</Button>
-                <TextBox Width="100" Name="ChangeValue"></TextBox>
+                <StackPanel Orientation="Horizontal">
+                    <Button Click="RefreshSelected" Padding="2">Refresh</Button>
+                    <Button Click="UpdateSelected" Padding="2">Update</Button>
+                    <Button Click="ChangeSelected" Padding="2">Update</Button>
+                    <TextBox Width="100" Name="ChangeValue"></TextBox>
+                </StackPanel>
             </StackPanel>
-        </StackPanel>
 
-        <StackPanel Grid.Column="0">
-            <Label Margin="5">Send to:</Label>
-            <Label Margin="2">Base.Floor.Room=> Stargate.F1.R1</Label>
-            <TextBox Margin="2" Name="RoutingKey1" ></TextBox>
+            <StackPanel Grid.Column="0">
+                <Label Margin="5">Send to:</Label>
+                <Label Margin="2">Base.Floor.Room=> Stargate.F1.S1.R1</Label>
+                <TextBox Margin="2" Name="RoutingKey1" ></TextBox>
 
-            <ComboBox Margin="2" Name="commandtypes"></ComboBox>
-            <Button Click="SendCommand">Send command</Button>
+                <ComboBox Margin="2" Name="commandtypes"></ComboBox>
+                <Button Click="SendCommand">Send command</Button>
 
-            <!--<Button Click="Test">PREsS ME</Button>-->
-            <ListView Margin="10" Name="currentErrors" Height="500"
+                <!--<Button Click="Test">PREsS ME</Button>-->
+                <ListView Margin="10" Name="currentErrors" Height="500"
                       VerticalContentAlignment="Top" 
           ScrollViewer.VerticalScrollBarVisibility="Visible"
           ScrollViewer.CanContentScroll="True"></ListView>
-        </StackPanel>
-
-        <StackPanel Grid.Column="2">
-            <StackPanel Margin="5">
-                <ComboBox Margin="2" Name="commandtypes2"></ComboBox>
-                <ComboBox Margin="2" Name="controllableType"></ComboBox>
-                <Button Margin="2" Click="ControllableCommand">
-                    General control
-                </Button>
-            </StackPanel>
-            <StackPanel Margin="5">
-                <Label Margin="5">Control specific:</Label>
-                <Label Margin="2">Base.Floor.Room=> Stargate.F1.R1</Label>
-                <TextBox Margin="2" Name="RoutingKey2" ></TextBox>
-
-                <ComboBox Margin="2" Name="commandtypes3"></ComboBox>
-                <ComboBox Margin="2" Name="controllableType2"></ComboBox>
-                <Button Margin="2" Click="ControllableCommandSpecific">Send command</Button>
             </StackPanel>
 
-            <ListView Margin="10" Name="currentUnreturned" Height="700"
+            <StackPanel Grid.Column="2">
+                <StackPanel Margin="5">
+                    <ComboBox Margin="2" Name="commandtypes2"></ComboBox>
+                    <ComboBox Margin="2" Name="controllableType"></ComboBox>
+                    <Button Margin="2" Click="ControllableCommand">
+                        General control
+                    </Button>
+                </StackPanel>
+                <StackPanel Margin="5">
+                    <Label Margin="5">Control specific:</Label>
+                    <Label Margin="2">Base.Floor.Room=> Stargate.F1.S1.R1</Label>
+                    <TextBox Margin="2" Name="RoutingKey2" ></TextBox>
+
+                    <ComboBox Margin="2" Name="commandtypes3"></ComboBox>
+                    <ComboBox Margin="2" Name="controllableType2"></ComboBox>
+                    <Button Margin="2" Click="ControllableCommandSpecific">Send command</Button>
+                </StackPanel>
+
+                <ListView Margin="10" Name="currentUnreturned" Height="700"
                       VerticalContentAlignment="Top" 
           ScrollViewer.VerticalScrollBarVisibility="Visible"
           ScrollViewer.CanContentScroll="True"></ListView>
-            
-        </StackPanel>
+
+            </StackPanel>
+        </Grid>
     </Grid>
 </Window>

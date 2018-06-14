@@ -81,10 +81,10 @@ namespace BaseControlCenter
 
                 var message = Encoding.UTF8.GetString(ea.Body);
                 HandleCommandAnswer(JsonConvert.DeserializeObject<ConfirmationSlip>(message));
-                
+
                 //System.Diagnostics.Debug.WriteLine(message);
                 //HandleCommandAnswer(JsonConvert.DeserializeObjec<>());
-                
+
             };
             routingKeys.Clear();
             routingKeys.Add("reply");
@@ -104,7 +104,7 @@ namespace BaseControlCenter
                 ChangeSpecific(measurement, 100);
                 System.Diagnostics.Debug.WriteLine("Sending command to: " + measurement.origin + " " + measurement.type);
             }
-            System.Diagnostics.Debug.WriteLine(measurement.ToString());
+            //System.Diagnostics.Debug.WriteLine(measurement.ToString());
         }
 
         public void UpdateSpecific(string routingKey, CommandTypes selectedCommandType)
@@ -175,8 +175,14 @@ namespace BaseControlCenter
         {
             Thread.Sleep(time);
             if (expected.Contains(key))
+            {
                 unreturnedCalls.Add("No response on: " + key);
                 System.Diagnostics.Debug.WriteLine("No response on: " + key);
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine(key + " responded");
+            }
         }
     }
 }

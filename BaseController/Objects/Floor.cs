@@ -78,12 +78,13 @@ namespace BaseController
                 switch (command.type)
                 {
                     case CommandTypes.On:
-                        sections.ForEach(y => y.rooms.ForEach(x => x.SetControllable(true, command.controllable)));
-                        //rooms.ForEach(x => x.SetControllable(true, command.controllable));
+                        SetControllable(command);
                         break;
                     case CommandTypes.Off:
-                        sections.ForEach(y => y.rooms.ForEach(x => x.SetControllable(false, command.controllable)));
-                        //rooms.ForEach(x => x.SetControllable(false, command.controllable));
+                        SetControllable(command);
+                        break;
+                    case CommandTypes.Resend:
+                        RequestControllableState(command);
                         break;
                     default:
                         System.Diagnostics.Debug.WriteLine("Invalid command: " + command.ToString());
@@ -94,7 +95,7 @@ namespace BaseController
             routingKeys.Add(fullName);
 
             reciever.SetListenerToExchange(
-                GateWayConfig.EXCHANGE_CONTROLLABLE_GENERAL,
+                GateWayConfig.EXCHANGE_CONTROLLABLE_SPECIFIC,
                 consumer,
                 routingKeys);
         }
@@ -110,6 +111,16 @@ namespace BaseController
         {
             foreach (Section section in this.sections)
                 section.Resend();
+        }
+
+        public void SetControllable(Command command)
+        {
+            sections.ForEach(x => x.SetControllable(command));
+        }
+
+        public void RequestControllableState(Command command)
+        {
+            sections.ForEach(x => x.RequestControllableState(command));
         }
     }
 }

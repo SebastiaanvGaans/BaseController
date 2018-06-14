@@ -18,7 +18,10 @@ namespace BaseController
         public static string QUEUE_SENSOR_IN = "SensorInputQueue";
         public static string QUEUE_SENSOR_ANSWER = "SensorAnswerQueue";
 
-        public static string EXCHANGE_CONTROLLABLE_GENERAL = "GeneralControl";
+        public static string EXCHANGE_CONTROLLABLE_GENERAL = "ControllableGeneral";
+        public static string EXCHANGE_CONTROLLABLE_SPECIFIC = "ControllableSpecific";
+
+        public static string EXCHANGE_CONTROLLABLE_ANSWER = "ControllableAnswer";
 
         public static string EXCHANGE_REQUEST = "Request";
 

@@ -19,6 +19,7 @@ namespace BaseControlCenter
         MessageSender sender;
 
         public Dictionary<string, Measurement> measurements = new Dictionary<string, Measurement>();
+        public Dictionary<DateTime, Measurement> badMeasurements = new Dictionary<DateTime, Measurement>();
 
 
         public ControlCenter()
@@ -66,6 +67,26 @@ namespace BaseControlCenter
                 GateWayConfig.EXCHANGE_SENSOR_IN,
                 consumer,
                 routingKeys);
+
+            //Listen to Controllable answers
+            consumer = new EventingBasicConsumer(reciever.GetChannel());
+            consumer.Received += (model, ea) =>
+            {
+                //TODO currently unused
+
+                var message = Encoding.UTF8.GetString(ea.Body);
+                HandleCommandAnswer(JsonConvert.DeserializeObject<ConfirmationSlip>(message));
+                
+                //System.Diagnostics.Debug.WriteLine(message);
+                //HandleCommandAnswer(JsonConvert.DeserializeObjec<>());
+                
+            };
+            routingKeys.Clear();
+            routingKeys.Add("reply");
+            reciever.SetListenerToExchange(
+                GateWayConfig.EXCHANGE_CONTROLLABLE_ANSWER,
+                consumer,
+                routingKeys);
         }
 
         private void HandleIncomingMeasurement(Measurement measurement)
@@ -74,21 +95,14 @@ namespace BaseControlCenter
                 measurements[measurement.ID] = measurement;
             else
             {
-                Command command = new Command(CommandTypes.Change);
-                command.sensor = measurement.type;
-                command.value = 100;
-
-                sender.SendToExchange(
-                    GateWayConfig.EXCHANGE_SENSOR_CONTROL,
-                    JsonConvert.SerializeObject(command),
-                    "direct",
-                    measurement.origin);
+                badMeasurements.Add(DateTime.Now, measurement);
+                ChangeSpecific(measurement, 100);
                 System.Diagnostics.Debug.WriteLine("Sending command to: " + measurement.origin + " " + measurement.type);
             }
             System.Diagnostics.Debug.WriteLine(measurement.ToString());
         }
 
-        public void updateSpecific(string routingKey, CommandTypes selectedCommandType)
+        public void UpdateSpecific(string routingKey, CommandTypes selectedCommandType)
         {
             //System.Diagnostics.Debug.WriteLine(routingKey);
             Command command = new Command(selectedCommandType);
@@ -100,9 +114,23 @@ namespace BaseControlCenter
                     routingKey);
         }
 
+        public void ChangeSpecific(Measurement measurement, float value)
+        {
+            Command command = new Command(CommandTypes.Change);
+            command.sensor = measurement.type;
+            command.value = value;
+
+            sender.SendToExchange(
+                GateWayConfig.EXCHANGE_SENSOR_CONTROL,
+                JsonConvert.SerializeObject(command),
+                "direct",
+                measurement.origin);
+        }
+
         public void ControllableCommandGeneral(CommandTypes commandType, ControllableType controllableType)
         {
             Command command = new Command(commandType);
+            command.origin = controllableType.ToString();
 
             sender.SendToExchange(
                 GateWayConfig.EXCHANGE_CONTROLLABLE_GENERAL,
@@ -113,12 +141,19 @@ namespace BaseControlCenter
         public void ControllableCommandSpecific(string routingKey, CommandTypes commandType, ControllableType controllableType)
         {
             Command command = new Command(commandType);
+            command.origin = routingKey;
+            command.controllable = controllableType;
 
             sender.SendToExchange(
-                GateWayConfig.EXCHANGE_CONTROLLABLE_GENERAL,
+                GateWayConfig.EXCHANGE_CONTROLLABLE_SPECIFIC,
                 JsonConvert.SerializeObject(command),
                 "direct",
                 routingKey);
+        }
+
+        public void HandleCommandAnswer(ConfirmationSlip slip)
+        {
+            System.Diagnostics.Debug.WriteLine(slip.ToString());
         }
     }
 }

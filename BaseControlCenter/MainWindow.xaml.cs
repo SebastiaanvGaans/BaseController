@@ -45,15 +45,19 @@ namespace BaseControlCenter
 
         private void SendCommand(object sender, RoutedEventArgs e)
         {
-            control.updateSpecific(RoutingKey1.Text, (CommandTypes)commandtypes.SelectedItem);
+            control.UpdateSpecific(RoutingKey1.Text, (CommandTypes)commandtypes.SelectedItem);
         }
 
         private void UpdateListView(object sender, RoutedEventArgs e)
         {
             var items = from pair in control.measurements orderby pair.Key ascending select pair;
-            //items.ToList();
-            //currentData.ItemsSource = control.measurements.OrderBy(i => i.Key).Values.ToList();
             currentData.ItemsSource = items.ToList();
+        }
+
+        private void UpdateErrors(object sender, RoutedEventArgs e)
+        {
+            var items = from pair in control.badMeasurements orderby pair.Key ascending select pair;
+            currentErrors.ItemsSource = items.ToList();
         }
 
         private void ControllableCommand(object sender, RoutedEventArgs e)
@@ -63,7 +67,10 @@ namespace BaseControlCenter
 
         private void ControllableCommandSpecific(object sender, RoutedEventArgs e)
         {
-           control.ControllableCommandSpecific(RoutingKey2.Text, (CommandTypes)commandtypes3.SelectedItem, (ControllableType)controllableType2.SelectedItem);
+           control.ControllableCommandSpecific(
+               RoutingKey2.Text, 
+               (CommandTypes)commandtypes3.SelectedItem, 
+               (ControllableType)controllableType2.SelectedItem);
         }
 
         private void Test(object sender, RoutedEventArgs e)
@@ -75,6 +82,26 @@ namespace BaseControlCenter
             Console.WriteLine(" [.] Got '{0}'", response);
 
             rpcClient.Close();
+        }
+
+        private void RefreshSelected(object sender, RoutedEventArgs e)
+        {
+            //System.Diagnostics.Debug.WriteLine(currentData.SelectedItem.ToString());
+            Measurement measurement = ((KeyValuePair<string, Measurement>)currentData.SelectedItem).Value;
+
+            control.UpdateSpecific(measurement.origin, CommandTypes.Resend);
+        }
+        private void UpdateSelected(object sender, RoutedEventArgs e)
+        {
+            Measurement measurement = ((KeyValuePair<string, Measurement>)currentData.SelectedItem).Value;
+
+            control.UpdateSpecific(measurement.origin, CommandTypes.Update);
+        }
+        private void ChangeSelected(object sender, RoutedEventArgs e)
+        {
+            Measurement measurement = ((KeyValuePair<string, Measurement>)currentData.SelectedItem).Value;
+
+            control.ChangeSpecific(measurement, float.Parse(ChangeValue.Text));
         }
     }
 }

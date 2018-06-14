@@ -89,10 +89,13 @@ namespace BaseController
                 switch (command.type)
                 {
                     case CommandTypes.On:
-                        SetControllable(true, command.controllable);
+                        SetControllable(command);
                         break;
                     case CommandTypes.Off:
-                        SetControllable(false, command.controllable);
+                        SetControllable(command);
+                        break;
+                    case CommandTypes.Resend:
+                        RequestControllableState(command);
                         break;
                     default:
                         System.Diagnostics.Debug.WriteLine("Invalid command: " + command.ToString());
@@ -103,7 +106,7 @@ namespace BaseController
             routingKeys.Add(fullName);
 
             reciever.SetListenerToExchange(
-                GateWayConfig.EXCHANGE_CONTROLLABLE_GENERAL,
+                GateWayConfig.EXCHANGE_CONTROLLABLE_SPECIFIC,
                 consumer,
                 routingKeys);
         }
@@ -151,9 +154,15 @@ namespace BaseController
             Measurement measurement = sensors.Find(x => x.sensorType == sensor).ChangeValue(value);
         }
 
-        public void SetControllable(bool value, ControllableType type)
+        public void SetControllable(Command command)
         {
-            controllables.Find(x => x.type == type).UpdateValue(value);
+            bool value = command.type == CommandTypes.On;
+            controllables.Find(x => x.type == command.controllable).UpdateValue(value, command);
+        }
+
+        public void RequestControllableState(Command command)
+        {
+            controllables.Find(x => x.type == command.controllable).RequestControllableState(command);
         }
     }
 }

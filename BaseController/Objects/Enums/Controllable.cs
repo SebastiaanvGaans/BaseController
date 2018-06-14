@@ -12,15 +12,17 @@ namespace BaseController
     public class Controllable
     {
         MessageReciever reciever;
+        MessageSender sender;
 
         public ControllableType type;
         public bool value;
 
         public string name;
 
-        public Controllable(string name , ControllableType controllableType, ConnectionFactory connectionFactory)
+        public Controllable(string name, ControllableType controllableType, ConnectionFactory connectionFactory)
         {
             reciever = new MessageReciever(connectionFactory);
+            sender = new MessageSender(connectionFactory);
 
             type = controllableType;
 
@@ -36,10 +38,13 @@ namespace BaseController
                 switch (command.type)
                 {
                     case CommandTypes.On:
-                        this.UpdateValue(true);
+                        this.UpdateValue(true, command);
                         break;
                     case CommandTypes.Off:
-                        this.UpdateValue(false);
+                        this.UpdateValue(false, command);
+                        break;
+                    case CommandTypes.Resend:
+                        this.RequestControllableState(command);
                         break;
                     default:
                         System.Diagnostics.Debug.WriteLine("Invalid command: " + command.ToString());
@@ -55,7 +60,7 @@ namespace BaseController
                 routingKeys);
 
 
-            #region old 
+            #region old RPC
             ///var channel = reciever.GetChannel();
 
             //channel.BasicQos(0, 1, false);
@@ -157,12 +162,44 @@ namespace BaseController
             #endregion
         }
 
-        public void UpdateValue(bool newVal)
+        public void UpdateValue(bool newVal, Command command = null)
         {
             this.value = newVal;
 
-            if (value) System.Diagnostics.Debug.WriteLine(name + ": Opened/Turned on " + type.ToString());
-            else System.Diagnostics.Debug.WriteLine(name + ": Closed/Turned off " + type.ToString());
+            //Send state to command answer queue
+            RequestControllableState(command);
+
+            //if (value) System.Diagnostics.Debug.WriteLine(name + ": Opened/Turned on " + type.ToString());
+            //else System.Diagnostics.Debug.WriteLine(name + ": Closed/Turned off " + type.ToString());
+        }
+
+        public void RequestControllableState(Command command = null)
+        {
+            string message = name;
+            string routingKey = command == null ? "reply" : command.returnKey;
+            //TODO send state to command answer buss
+            if (command == null)
+            {
+                if (value) message = name + ": " + type.ToString() + " is opened/turned on";
+                else message = name + ": " + type.ToString() + " is closed/turned off ";
+            }
+            else
+            {
+                var slip = new ConfirmationSlip(
+                    command.origin,
+                    this.name,
+                    this.type,
+                    this.value);
+
+                message = JsonConvert.SerializeObject(slip);
+            }
+
+            sender.SendToExchange(
+                GateWayConfig.EXCHANGE_CONTROLLABLE_ANSWER,
+                message,
+                "direct",
+                "reply");
+
         }
 
 

@@ -13,6 +13,9 @@ namespace BaseController
         public SensorTypes sensor;
         public float value;
 
+        public string origin;
+        public string returnKey;
+
         public ControllableType controllable;
 
         public Command(CommandTypes type)

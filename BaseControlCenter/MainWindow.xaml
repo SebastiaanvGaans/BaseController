@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BaseControlCenter"
         mc:Ignorable="d"
-        Title="MainWindow" Height="500" Width="700" Loaded="Window_Loaded">
+        Title="MainWindow" Height="900" Width="1200" Loaded="Window_Loaded">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -18,10 +18,16 @@
 
         <StackPanel Grid.Column="1">
             <Button Margin="2" Click="UpdateListView">Refresh</Button>
-            <ListView Margin="10" Name="currentData"
+            <ListView Margin="10" Name="currentData" Height="700"
                       VerticalContentAlignment="Top" 
           ScrollViewer.VerticalScrollBarVisibility="Visible"
           ScrollViewer.CanContentScroll="True"></ListView>
+            <StackPanel Orientation="Horizontal">
+                <Button Click="RefreshSelected" Padding="2">Refresh</Button>
+                <Button Click="UpdateSelected" Padding="2">Update</Button>
+                <Button Click="ChangeSelected" Padding="2">Update</Button>
+                <TextBox Name="ChangeValue"></TextBox>
+            </StackPanel>
         </StackPanel>
 
         <StackPanel Grid.Column="0">
@@ -33,8 +39,14 @@
             <Button Click="SendCommand">Send command</Button>
 
             <!--<Button Click="Test">PREsS ME</Button>-->
+
+            <Button Margin="2" Click="UpdateErrors">Refresh</Button>
+            <ListView Margin="10" Name="currentErrors" Height="500"
+                      VerticalContentAlignment="Top" 
+          ScrollViewer.VerticalScrollBarVisibility="Visible"
+          ScrollViewer.CanContentScroll="True"></ListView>
         </StackPanel>
-        
+
         <StackPanel Grid.Column="2">
             <StackPanel Margin="5">
                 <ComboBox Margin="2" Name="commandtypes2"></ComboBox>

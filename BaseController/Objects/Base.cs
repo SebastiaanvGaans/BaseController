@@ -62,6 +62,37 @@ namespace BaseController
                 GateWayConfig.EXCHANGE_SENSOR_CONTROL,
                 consumer,
                 routingKeys);
+
+            //Listen to controllable commands
+            consumer = new EventingBasicConsumer(reciever.GetChannel());
+            consumer.Received += (model, ea) =>
+            {
+                var message = Encoding.UTF8.GetString(ea.Body);
+                Command command = JsonConvert.DeserializeObject<Command>(message);
+
+                switch (command.type)
+                {
+                    case CommandTypes.On:
+                        SetControllable(command);
+                        break;
+                    case CommandTypes.Off:
+                        SetControllable(command);
+                        break;
+                    case CommandTypes.Resend:
+                        RequestControllableState(command);
+                        break;
+                    default:
+                        System.Diagnostics.Debug.WriteLine("Invalid command: " + command.ToString());
+                        break;
+                }
+            };
+            routingKeys = new List<string>();
+            routingKeys.Add(fullName);
+
+            reciever.SetListenerToExchange(
+                GateWayConfig.EXCHANGE_CONTROLLABLE_SPECIFIC,
+                consumer,
+                routingKeys);
         }
 
         public void Update()
@@ -74,6 +105,16 @@ namespace BaseController
         {
             foreach (Floor floor in floors)
                 floor.Resend();
+        }
+
+        public void SetControllable(Command command)
+        {
+            floors.ForEach(x => x.SetControllable(command));
+        }
+
+        public void RequestControllableState(Command command)
+        {
+            floors.ForEach(x => x.RequestControllableState(command));
         }
     }
 }

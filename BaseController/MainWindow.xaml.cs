@@ -30,14 +30,14 @@ namespace BaseController
         public MainWindow()
         {
             InitializeComponent();
-            Stargate = new Base("Stargate", 5,3, 3, factory);
-            Area51 = new Base("Area51", 4, 2, 2, factory);
+            Stargate = new Base("Stargate", 4, 4, 4, factory);
+            //Area51 = new Base("Area51", 4, 2, 2, factory);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Stargate.Update();
-            Area51.Update();
+            //Area51.Update();
         }
     }
 }

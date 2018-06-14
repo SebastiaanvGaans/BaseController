@@ -17,7 +17,7 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Column="1">
-            <Button Margin="2" Click="UpdateListView">Refresh</Button>
+            <Button Margin="2" Click="UpdateListViews">Refresh</Button>
             <ListView Margin="10" Name="currentData" Height="700"
                       VerticalContentAlignment="Top" 
           ScrollViewer.VerticalScrollBarVisibility="Visible"
@@ -26,7 +26,7 @@
                 <Button Click="RefreshSelected" Padding="2">Refresh</Button>
                 <Button Click="UpdateSelected" Padding="2">Update</Button>
                 <Button Click="ChangeSelected" Padding="2">Update</Button>
-                <TextBox Name="ChangeValue"></TextBox>
+                <TextBox Width="100" Name="ChangeValue"></TextBox>
             </StackPanel>
         </StackPanel>
 
@@ -39,8 +39,6 @@
             <Button Click="SendCommand">Send command</Button>
 
             <!--<Button Click="Test">PREsS ME</Button>-->
-
-            <Button Margin="2" Click="UpdateErrors">Refresh</Button>
             <ListView Margin="10" Name="currentErrors" Height="500"
                       VerticalContentAlignment="Top" 
           ScrollViewer.VerticalScrollBarVisibility="Visible"
@@ -65,6 +63,11 @@
                 <Button Margin="2" Click="ControllableCommandSpecific">Send command</Button>
             </StackPanel>
 
+            <ListView Margin="10" Name="currentUnreturned" Height="700"
+                      VerticalContentAlignment="Top" 
+          ScrollViewer.VerticalScrollBarVisibility="Visible"
+          ScrollViewer.CanContentScroll="True"></ListView>
+            
         </StackPanel>
     </Grid>
 </Window>

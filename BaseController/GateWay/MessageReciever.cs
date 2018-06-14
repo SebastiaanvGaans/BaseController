@@ -29,6 +29,11 @@ namespace BaseController
             return this.channel;
         }
 
+        public IModel GetNewChannel()
+        {
+            return connection.CreateModel();
+        }
+
         public void SetListenerToQueue(
             string queueName,
             EventingBasicConsumer consumer)

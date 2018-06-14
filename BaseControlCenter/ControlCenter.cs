@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using BaseController;
 using Newtonsoft.Json;
@@ -17,6 +18,10 @@ namespace BaseControlCenter
 
         MessageReciever reciever;
         MessageSender sender;
+
+        List<string> expected = new List<string>();
+
+        public List<string> unreturnedCalls = new List<string>();
 
         public Dictionary<string, Measurement> measurements = new Dictionary<string, Measurement>();
         public Dictionary<DateTime, Measurement> badMeasurements = new Dictionary<DateTime, Measurement>();
@@ -132,11 +137,15 @@ namespace BaseControlCenter
             Command command = new Command(commandType);
             command.origin = controllableType.ToString();
 
+            expected.Add(command.origin);
+
             sender.SendToExchange(
                 GateWayConfig.EXCHANGE_CONTROLLABLE_GENERAL,
                 JsonConvert.SerializeObject(command),
                 "direct",
                 controllableType.ToString());
+
+
         }
         public void ControllableCommandSpecific(string routingKey, CommandTypes commandType, ControllableType controllableType)
         {
@@ -144,16 +153,30 @@ namespace BaseControlCenter
             command.origin = routingKey;
             command.controllable = controllableType;
 
+            expected.Add(command.origin);
+
             sender.SendToExchange(
                 GateWayConfig.EXCHANGE_CONTROLLABLE_SPECIFIC,
                 JsonConvert.SerializeObject(command),
                 "direct",
                 routingKey);
+
+            new Thread(() => WaitForAnswer(command.origin, 5000)).Start();
         }
 
         public void HandleCommandAnswer(ConfirmationSlip slip)
         {
+            if (expected.Contains(slip.requestor))
+                expected.Remove(slip.requestor);
             System.Diagnostics.Debug.WriteLine(slip.ToString());
+        }
+
+        public void WaitForAnswer(string key, int time)
+        {
+            Thread.Sleep(time);
+            if (expected.Contains(key))
+                unreturnedCalls.Add("No response on: " + key);
+                System.Diagnostics.Debug.WriteLine("No response on: " + key);
         }
     }
 }

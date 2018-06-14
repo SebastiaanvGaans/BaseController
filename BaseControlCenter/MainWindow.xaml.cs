@@ -48,16 +48,15 @@ namespace BaseControlCenter
             control.UpdateSpecific(RoutingKey1.Text, (CommandTypes)commandtypes.SelectedItem);
         }
 
-        private void UpdateListView(object sender, RoutedEventArgs e)
+        private void UpdateListViews(object sender, RoutedEventArgs e)
         {
             var items = from pair in control.measurements orderby pair.Key ascending select pair;
             currentData.ItemsSource = items.ToList();
-        }
 
-        private void UpdateErrors(object sender, RoutedEventArgs e)
-        {
-            var items = from pair in control.badMeasurements orderby pair.Key ascending select pair;
-            currentErrors.ItemsSource = items.ToList();
+            var errors = from pair in control.badMeasurements orderby pair.Key ascending select pair;
+            currentErrors.ItemsSource = errors.ToList();
+
+            currentUnreturned.ItemsSource = control.unreturnedCalls;
         }
 
         private void ControllableCommand(object sender, RoutedEventArgs e)
